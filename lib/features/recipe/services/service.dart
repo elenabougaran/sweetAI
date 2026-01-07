@@ -1,1 +1,0 @@
-// transforme les données en un modele, gère les erreurs de l'api et les transforme een erreur compréhensibles pour l'UI

@@ -1,1 +1,0 @@
-//gère la connexion aux endpoints, retourne la réponse brute, lance une exception si le HTTP échoue
