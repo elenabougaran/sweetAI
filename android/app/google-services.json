@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "766176799360",
+    "project_id": "sweetai-c7578",
+    "storage_bucket": "sweetai-c7578.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766176799360:android:39921461f812fcc7a75465",
+        "android_client_info": {
+          "package_name": "com.example.sweetai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbuQQFTYEdUSNEX_9f1lVbc3zKqAJ88dY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

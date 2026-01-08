@@ -40,6 +40,9 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
         image: DecorationImage(
           image: AssetImage('assets/images/background.jpg'),
           fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+             Color(0xEEFFFFFF),
+            BlendMode.dstATop)
         ),
       ),
       child: Scaffold(
@@ -57,79 +60,114 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
             child: Column(
               children: [
                 /// Formulaire
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Ingrédient',
-                        ),
-                        controller: _nameController,
-                        /*onChanged: (value) {
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(220),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                labelText: 'Ingrédient',
+                              ),
+                              controller: _nameController,
+                              /*onChanged: (value) {
                         ref.read(nameProvider.notifier).state = value;
                       },*/
-                        textInputAction: TextInputAction.done,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        decoration: const InputDecoration(labelText: 'Qté'),
-                        controller: _quantityController,
-                        /*onChanged: (value) {
+                              textInputAction: TextInputAction.done,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            flex: 2,
+                            child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                              decoration: const InputDecoration(
+                                labelText: 'Qté',
+                              ),
+                              controller: _quantityController,
+                              /*onChanged: (value) {
                         ref.read(quantityProvider.notifier).state = value;
                       },*/
-                        textInputAction: TextInputAction.done,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    DropdownButton<Unit>(
-                      value: selectedUnit,
-                      onChanged: (unit) {
-                        if (unit != null) {
-                          ref.read(unitProvider.notifier).state = unit;
-                        }
-                      },
-                      items: Unit.values
-                          .map(
-                            (unit) => DropdownMenuItem(
-                              value: unit,
-                              child: Text(unit.label),
+                              textInputAction: TextInputAction.done,
                             ),
-                          )
-                          .toList(),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        final name = _nameController.text.trim();
-                        final quantity =
-                            double.tryParse(_quantityController.text) ?? 0;
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: DropdownButtonFormField<Unit>(
+                                initialValue: selectedUnit,
+                                isDense: true,
+                                isExpanded: true,
+                                onChanged: (unit) {
+                                  if (unit != null) {
+                                    ref.read(unitProvider.notifier).state =
+                                        unit;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 14,
+                                  ),
+                                  border: OutlineInputBorder(),
+                                ),
+                                items: Unit.values
+                                    .map(
+                                      (unit) => DropdownMenuItem(
+                                        value: unit,
+                                        child: Text(unit.label),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Padding(
+                            padding: EdgeInsets.only(top: 15),
+                            child: IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                final name = _nameController.text.trim();
+                                final quantity =
+                                    double.tryParse(_quantityController.text) ??
+                                    0;
 
-                        if (name.isEmpty || quantity <= 0) return;
+                                if (name.isEmpty || quantity <= 0) return;
 
-                        ref
-                            .read(fridgeViewModelProvider.notifier)
-                            .addIngredientFromInput(
-                              name: name,
-                              quantity: quantity,
-                              unit: selectedUnit,
-                            );
-                        // Reset providers
-                        //ref.read(nameProvider.notifier).state = '';
-                        //ref.read(quantityProvider.notifier).state = '';
-                        // Reset UI
-                        _nameController.clear();
-                        _quantityController.clear();
-                      },
-                    ),
-                  ],
+                                ref
+                                    .read(fridgeViewModelProvider.notifier)
+                                    .addIngredientFromInput(
+                                      name: name,
+                                      quantity: quantity,
+                                      unit: selectedUnit,
+                                    );
+                                // Reset providers
+                                //ref.read(nameProvider.notifier).state = '';
+                                //ref.read(quantityProvider.notifier).state = '';
+                                // Reset UI
+                                _nameController.clear();
+                                _quantityController.clear();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
 
                 const SizedBox(height: 24),
@@ -147,51 +185,53 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: ListTile(
-                            tileColor: Colors.white.withAlpha(230),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              tileColor: Colors.white.withAlpha(230),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              title: Text(
+                                '${ingredient.quantity.clean} ${ingredient.unit.label} de ${ingredient.name}',
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () => ref
+                                    .read(fridgeViewModelProvider.notifier)
+                                    .deleteIngredient(ingredient),
+                              ),
                             ),
-                            title: Text(
-                              '${ingredient.quantity.clean} ${ingredient.unit.label} de ${ingredient.name}',
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () => ref
-                                  .read(fridgeViewModelProvider.notifier)
-                                  .deleteIngredient(ingredient),
-                            ),
-                          ),
                           );
                         },
                       ),
-
-                ElevatedButton(
-                  onPressed:
-                      (ingredients.isNotEmpty &&
-                          ingredients.every((i) => i.quantity > 0.0))
-                      ? () async {
-                          print("Bouton cliqué");
-                          await ref
-                              .read(fridgeViewModelProvider.notifier)
-                              .createRecipe();
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: ElevatedButton(
+                    onPressed:
+                        (ingredients.isNotEmpty &&
+                            ingredients.every((i) => i.quantity > 0.0))
+                        ? () async {
+                            print("Bouton cliqué");
+                            await ref
+                                .read(fridgeViewModelProvider.notifier)
+                                .createRecipe();
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Créer ma recette',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    child: const Text(
+                      'Créer ma recette',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -207,17 +247,17 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
                         if (recipe.isEmpty) return const SizedBox.shrink();
 
                         return Padding(
-                          padding: const EdgeInsetsGeometry.only(top: 8),
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withAlpha(200),
-                                borderRadius: BorderRadius.circular(12),
-                                ),
-                            child: buildRecipeFormatted(recipe),
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(200),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          );
+                            child: buildRecipeFormatted(recipe),
+                          ),
+                        );
                       },
                     ),
               ],
