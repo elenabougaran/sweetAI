@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sweetai/models/ingredient.dart';
 import 'package:sweetai/services/ai_recipe_service.dart';
 import 'package:sweetai/providers/recipe_providers.dart';
-
+import 'package:sweetai/utils/recipe_text_formatter.dart';
 
 final fridgeViewModelProvider =
     StateNotifierProvider<FridgeViewModel, List<Ingredient>>((ref) { //crée une instance de FridgeViewModel
@@ -72,19 +72,5 @@ class FridgeViewModel extends StateNotifier<List<Ingredient>> {
         st,
       );
     }
-  }
-
-  ///Extrait la recette de la réponse de l'IA (il y a du texte en plus de la recette)
-  String extractRecipe(String fullText) {
-    // Cherche "Préparation" ou "Instructions" et coupe avant
-    final patterns = ["###"];
-    for (var pattern in patterns) {
-      final index = fullText.indexOf(pattern);
-      if (index != -1) {
-        return fullText.substring(index); // garde le texte à partir de ce mot
-      }
-    }
-    // si aucun mot clé trouvé, retourne le texte entier
-    return fullText;
   }
 }

@@ -10,7 +10,7 @@ class OpenRouterHttpClient {
   OpenRouterHttpClient({String? apiKey})
       : apiKey = apiKey ?? dotenv.env['OPENROUTER_API_KEY']!; // clé par défaut
 
-  Future<Map<String, dynamic>> post(String model, String prompt, {int maxTokens = 1500}) async {
+  Future<Map<String, dynamic>> post(String model, String prompt, {int maxTokens = 10}) async { //modifier à 1500 avant mise en prod
     final url = Uri.parse("https://openrouter.ai/api/v1/chat/completions");
     final headers = {
       "Content-Type": "application/json",

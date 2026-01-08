@@ -5,6 +5,7 @@ import 'package:sweetai/models/ingredient.dart';
 import 'package:sweetai/providers/recipe_providers.dart';
 import 'package:sweetai/providers/ingredients_form_providers.dart';
 import 'package:sweetai/utils/double_extensions.dart';
+import 'package:sweetai/utils/recipe_text_formatter.dart';
 
 class FridgeView extends ConsumerStatefulWidget {
   const FridgeView({super.key});
@@ -214,10 +215,7 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
                                 color: Colors.white.withAlpha(200),
                                 borderRadius: BorderRadius.circular(12),
                                 ),
-                            child: Text(
-                              recipe,
-                              style: const TextStyle(fontSize: 16),
-                            ),
+                            child: buildRecipeFormatted(recipe),
                             ),
                           );
                       },
