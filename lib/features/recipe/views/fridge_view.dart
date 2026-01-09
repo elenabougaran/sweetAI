@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sweetai/features/recipe/viewmodels/fridgeviewmodel.dart';
+import 'package:sweetai/features/recipe/viewmodels/fridge_viewmodel.dart';
 import 'package:sweetai/models/ingredient.dart';
 import 'package:sweetai/models/recipe.dart';
 import 'package:sweetai/providers/recipe_providers.dart';
@@ -47,18 +47,12 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent, // IMPORTANT
-        appBar: AppBar(
-          title: const Text('Mon réfrigérateur'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          // Optionnel: pour que le titre/icone soit lisible selon l'image
-          // foregroundColor: Colors.white,
-        ),
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(height: 100),
                 /// Formulaire
                 Container(
                   padding: const EdgeInsets.all(12),

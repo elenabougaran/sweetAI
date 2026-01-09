@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../repositories/firestore_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/recipe.dart';
+import '../providers/auth_providers.dart';
 
 // Provider pour stocker la recette générée
 final recipeProvider = StateProvider<Recipe?>((ref) => null);
@@ -43,3 +44,15 @@ final recipeServiceProvider = Provider<RecipeService>(
   },
 ); //provider crée une instance du service que l'on peut reutiliser à plusieurs endroits, donne accès à AsyncLoading(), AsyncData(""), AsyncError(error)
 
+//permet a la liste des recettes de suivre les changements des recettes dans firestore
+final recipesStreamProvider =
+    StreamProvider.autoDispose<List<Recipe>>((ref) {
+  final user = ref.watch(currentUserProvider);
+  final service = ref.watch(recipeServiceProvider);
+
+  if (user == null) {
+    return const Stream.empty();
+  }
+
+  return service.watchUserRecipes(uid: user.uid);
+});

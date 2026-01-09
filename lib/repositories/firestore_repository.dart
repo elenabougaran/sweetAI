@@ -14,7 +14,7 @@ class RecipeFirestoreRepository {
     required Recipe recipe,
   }) async {
     final docRef = _col(uid).doc();
-    await docRef.set(recipe.toMap(uid:uid));
+    await docRef.set(recipe.toMap(uid: uid));
     return docRef.id;
   }
 
@@ -23,16 +23,32 @@ class RecipeFirestoreRepository {
         .orderBy("createdAt", descending: true)
         .snapshots()
         .map(
-          (snap) => snap.docs
-              .map((d) => Recipe.fromMap(d.id, d.data()))
-              .toList(),
+          (snap) =>
+              snap.docs.map((d) => Recipe.fromMap(d.id, d.data())).toList(),
         );
   }
 
-  Future<void> deleteRecipe({
-    required String uid,
-    required String recipeId,
-  }) {
+  Future<void> deleteRecipe({required String uid, required String recipeId}) {
     return _col(uid).doc(recipeId).delete();
+  }
+
+  Stream<List<Recipe>> loadRecipes({required String uid}) {
+    return firestore
+        .collection('users')
+        .doc(uid)
+        .collection('recipes')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+
+            return Recipe(
+              title: (data['title'] ?? '') as String,
+              ingredients: List<String>.from(data['ingredients'] ?? const []),
+              steps: List<String>.from(data['steps'] ?? const []),
+            );
+          }).toList();
+        });
   }
 }
