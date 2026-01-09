@@ -41,3 +41,4 @@ ios/Pods/
 .svn/
 .swiftpm/
 migrate_working_dir/
+.env
