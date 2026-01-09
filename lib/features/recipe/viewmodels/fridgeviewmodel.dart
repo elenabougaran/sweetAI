@@ -2,18 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sweetai/models/ingredient.dart';
 import 'package:sweetai/services/ai_recipe_service.dart';
 import 'package:sweetai/providers/recipe_providers.dart';
-import 'package:sweetai/utils/recipe_text_formatter.dart';
+import 'package:sweetai/providers/auth_providers.dart';
 
 final fridgeViewModelProvider =
-    StateNotifierProvider<FridgeViewModel, List<Ingredient>>((ref) { //crée une instance de FridgeViewModel
+    StateNotifierProvider<FridgeViewModel, List<Ingredient>>((ref) {
+      //crée une instance de FridgeViewModel
       //ce provider est une liste d'ingrédients, et expose un stateNotifier qui a les méthodes pour modifier cette liste (addingredient et deleteingredient)
       final service = ref.read(
         recipeServiceProvider,
       ); //provider du VM maj quand le provider du service est maj
       return FridgeViewModel(service, ref);
     });
-
-
 
 class FridgeViewModel extends StateNotifier<List<Ingredient>> {
   final RecipeService _service;
@@ -57,14 +56,24 @@ class FridgeViewModel extends StateNotifier<List<Ingredient>> {
         .join(", ");
 
     try {
-      print("on est dans createRecipe");
       _ref.read(recipeStatusProvider.notifier).state =
           const AsyncValue.loading();
-      final generated = await _service.getRecipe(ingredientsText);
-      final recipeOnly = extractRecipe(generated);
-      _ref.read(recipeTextProvider.notifier).state = recipeOnly;
+      final user = _ref.read(currentUserProvider);
+      
+      if (user == null) {
+        _ref.read(recipeStatusProvider.notifier).state = AsyncValue.error(
+          "Utilisateur non connecté",
+          StackTrace.current,
+        );
+        return;
+      }
+      final generated = await _service.generateAndSaveRecipe(
+        uid: user.uid,
+        ingredients: ingredientsText,
+      );
+      _ref.read(recipeProvider.notifier).state = generated;
       _ref.read(recipeStatusProvider.notifier).state = AsyncValue.data(
-        recipeOnly,
+        generated,
       );
     } catch (e, st) {
       _ref.read(recipeStatusProvider.notifier).state = AsyncValue.error(

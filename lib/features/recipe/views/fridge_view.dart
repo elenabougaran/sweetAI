@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sweetai/features/recipe/viewmodels/fridgeviewmodel.dart';
 import 'package:sweetai/models/ingredient.dart';
+import 'package:sweetai/models/recipe.dart';
 import 'package:sweetai/providers/recipe_providers.dart';
 import 'package:sweetai/providers/ingredients_form_providers.dart';
 import 'package:sweetai/utils/double_extensions.dart';
-import 'package:sweetai/utils/recipe_text_formatter.dart';
 
 class FridgeView extends ConsumerStatefulWidget {
   const FridgeView({super.key});
@@ -209,7 +209,6 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
                         (ingredients.isNotEmpty &&
                             ingredients.every((i) => i.quantity > 0.0))
                         ? () async {
-                            print("Bouton cliqué");
                             await ref
                                 .read(fridgeViewModelProvider.notifier)
                                 .createRecipe();
@@ -244,7 +243,7 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
                       loading: () => const CircularProgressIndicator(),
                       error: (error, _) => Text('Erreur : $error'),
                       data: (recipe) {
-                        if (recipe.isEmpty) return const SizedBox.shrink();
+                        if (recipe == null) return const SizedBox.shrink();
 
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
@@ -267,4 +266,46 @@ class _FridgeViewState extends ConsumerState<FridgeView> {
       ),
     );
   }
+
+  Widget buildRecipeFormatted(Recipe recipe) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        recipe.title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 12),
+
+      const Text(
+        "Ingrédients",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 6),
+      ...recipe.ingredients.map((i) => Padding( //pour chaque ingrédient i crée un widget
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Text("• $i"),
+          )),
+
+      const SizedBox(height: 12),
+      const Text(
+        "Étapes",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 6),
+      ...recipe.steps.asMap().entries.map((entry) { //asMap permet d'associer à chaque étape son numoéro d'étape
+        final index = entry.key + 1;
+        final step = entry.value;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Text("$index. $step"),
+        );
+      }),
+    ],
+  );
+}
+
 }

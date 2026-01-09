@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 
 ///Extrait la recette de la réponse de l'IA (il y a du texte en plus de la recette)
-String extractRecipe(String fullText) {
+/*String extractRecipe(String fullText) {
   // Cherche "Préparation" ou "Instructions" et coupe avant
   final patterns = ["###"];
   for (var pattern in patterns) {
@@ -113,3 +112,4 @@ List<TextSpan> _parseBold(String text) {
 
   return spans;
 }
+*/

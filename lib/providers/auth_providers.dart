@@ -8,3 +8,8 @@ final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
 final authStateChangesProvider = StreamProvider<User?>((ref) {
   return ref.watch(firebaseAuthProvider).authStateChanges();
 });
+
+final currentUserProvider = Provider<User?>((ref) {//récupère l'utilisateur connecté
+  final auth = ref.watch(firebaseAuthProvider);
+  return auth.currentUser;
+});
