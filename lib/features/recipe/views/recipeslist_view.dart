@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sweetai/models/recipe.dart';
 import 'package:sweetai/providers/recipe_providers.dart'; // là où est recipesStreamProvider
+import 'package:sweetai/features/recipe/views/recipedetails_view.dart';
 
 class RecipesListView extends ConsumerWidget {
   const RecipesListView({super.key});
@@ -11,6 +12,7 @@ class RecipesListView extends ConsumerWidget {
     final recipesAsync = ref.watch(recipesStreamProvider);
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 246, 237, 240),
       body: recipesAsync.when(
         data: (recipes) {
           if (recipes.isEmpty) {
@@ -27,7 +29,9 @@ class RecipesListView extends ConsumerWidget {
                 title: Text(recette.title),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
-                  // TODO: navigation vers la page de détail, avec la recette
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => RecipeDetailView(recipeId: recette.id))
+                  );
                 },
               );
             },

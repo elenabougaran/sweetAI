@@ -54,4 +54,11 @@ Ingrédients disponibles : $ingredients
   Stream<List<Recipe>> watchUserRecipes({required String uid}) {
     return firestoreRepository.loadRecipes(uid: uid);
   }
+
+  Stream<Recipe?> watchUserRecipeById({
+    required String uid,
+    required String recipeId,
+  }) {
+    return firestoreRepository.loadRecipeById(uid: uid, recipeId: recipeId);
+  }
 }

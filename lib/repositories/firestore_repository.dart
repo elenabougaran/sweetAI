@@ -33,7 +33,7 @@ class RecipeFirestoreRepository {
   }
 
   Stream<List<Recipe>> loadRecipes({required String uid}) {
-    return firestore
+    /*return firestore
         .collection('users')
         .doc(uid)
         .collection('recipes')
@@ -49,6 +49,28 @@ class RecipeFirestoreRepository {
               steps: List<String>.from(data['steps'] ?? const []),
             );
           }).toList();
-        });
+        });*/
+         return _col(uid)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) {
+        return snapshot.docs
+            .map((doc) => Recipe.fromMap(doc.id, doc.data()))
+            .toList();
+      });
   }
+
+  Stream<Recipe?> loadRecipeById({
+  required String uid,
+  required String recipeId,
+}) {
+  return _col(uid)
+      .doc(recipeId)
+      .snapshots()
+      .map((doc) {
+        if (!doc.exists) return null;
+        return Recipe.fromMap(doc.id, doc.data()!);
+      });
+}
+
 }

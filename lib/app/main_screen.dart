@@ -36,7 +36,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // TODO: ajouter une recette
+              setState(() {
+                _currentIndex = 0;
+              }); 
             },
           ),
         ],

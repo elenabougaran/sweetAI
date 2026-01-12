@@ -72,7 +72,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                     labelText: 'Email',
                     hintText: 'ex: nom@domaine.com',
                     prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(15))),
                   ),
                   onChanged: (value) {
                     if (!_initialized) return;
@@ -101,7 +101,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                   decoration: InputDecoration(
                     labelText: 'Mot de passe',
                     prefixIcon: Icon(Icons.lock),
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(15))),
                   ),
                 ),
 
